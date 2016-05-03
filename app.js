@@ -1,5 +1,6 @@
 (function (){
   let options = INSTALL_OPTIONS
+  const elements = []
 
   const vimeoRegex = /https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/i
 
@@ -24,7 +25,7 @@
         embed += "title=0&byline=0&portrait=0"
       }
 
-      const element = Eager.createElement(options.embeds[i].location)
+      const element = elements[i] = Eager.createElement(options.embeds[i].location)
 
       element.innerHTML = `<iframe src="${embed}" width="640" height="390" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>`
     }
@@ -39,6 +40,7 @@
 
   window.INSTALL_SCOPE = {
     setOptions(nextOptions) {
+      elements.forEach(element => Eager.createElement(null, element))
       options = nextOptions
 
       addOptionsURL()
