@@ -1,6 +1,6 @@
 (function (){
-  let options = INSTALL_OPTIONS
   const elements = []
+  let options = INSTALL_OPTIONS
 
   const vimeoRegex = /https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/i
 
@@ -10,26 +10,30 @@
     return match ? match[3] : null 
   }
 
-  function addOptionsURL(){
-    for (let i = 0; i < options.embeds.length; i++){
-      if (!options.embeds[i].url || !options.embeds[i].location || !options.embeds[i].location.selector) return
+  function addOptionsURL(){      
+    const {embeds} = options
 
-      const info = getVideoID(options.embeds[i].url)
+    embeds
+      .reverse()
+      .filter($ => $.url)
+      .forEach(({url, location, autoplay}, i) => {
+        const info = getVideoID(url)
 
-      let embed = `https://player.vimeo.com/video/${info}?`
+        let embed = `https://player.vimeo.com/video/${info}?`
 
-      if (options.embeds[i].autoplay){
-        embed += "autoplay=1&title=0&byline=0&portrait=0"
-      }
-      else {
-        embed += "title=0&byline=0&portrait=0"
-      }
+        if (autoplay){
+          embed += "autoplay=1&title=0&byline=0&portrait=0"
+        }
+        else {
+          embed += "title=0&byline=0&portrait=0"
+        }
 
-      const element = elements[i] = Eager.createElement(options.embeds[i].location)
+        const element = elements[i] = Eager.createElement(location, elements[i])
 
-      element.innerHTML = `<iframe src="${embed}" width="640" height="390" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>`
-    }
+        element.innerHTML = `<iframe src="${embed}" width="640" height="390" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>`
+      })
   }
+  
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", addOptionsURL)
