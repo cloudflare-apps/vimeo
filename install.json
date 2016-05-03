@@ -1,26 +1,44 @@
 {
   "resources": {
-    "body": [
-      {
-        "type": "style",
-        "src": "./build/app.css"
-      },
+    "head": [
       {
         "type": "script",
-        "src": "./build/app.js"
-      }
-    ]
-  },
-  "preview": {
-    "handlers": [
-      {
-        "options": ["*"],
-        "execute": "INSTALL_SCOPE.setOptions(INSTALL_OPTIONS)"
+        "src": "./app.js"
       }
     ]
   },
   "options": {
     "properties": {
+      "embeds": {
+        "title": "Videos or Playlists",
+        "type": "array",
+        "items": {
+          "title": "Embed",
+          "type": "object",
+          "properties": {
+            "url": {
+              "title": "URL",
+              "type": "string",
+              "description": "The URL of the Vimeo video or playlist to be embedded",
+              "order": 1,
+              "default": "https://vimeo.com/45196609"
+            },
+            "location": {
+              "title": "Location",
+              "type": "object",
+              "format": "element",
+              "description": "Select where on the page would you like this embed to appear",
+              "order": 2
+            },
+            "autoplay": {
+              "title": "Autoplay",
+              "type": "boolean",
+              "description": "Should the video play automatically when the page is loaded?",
+              "order": 3
+            }
+          }
+        }
+      }
     }
   }
 }
