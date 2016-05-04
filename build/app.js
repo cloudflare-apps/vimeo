@@ -12,7 +12,7 @@
     return match ? match[3] : null;
   }
 
-  function addOptionsURL() {
+  function updateElements() {
     var _options = options;
     var embeds = _options.embeds;
 
@@ -26,24 +26,22 @@
 
       var info = getVideoID(url);
 
-      var embed = "https://player.vimeo.com/video/" + info + "?";
+      var src = "https://player.vimeo.com/video/" + info + "?title=0&byline=0&portrait=0";
 
       if (autoplay) {
-        embed += "autoplay=1&title=0&byline=0&portrait=0";
-      } else {
-        embed += "title=0&byline=0&portrait=0";
+        src += "&autoplay=1";
       }
 
       var element = elements[i] = Eager.createElement(location, elements[i]);
 
-      element.innerHTML = "<iframe src=\"" + embed + "\" width=\"640\" height=\"390\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>";
+      element.innerHTML = "<div style=\"text-align: center; width: 100%\"><iframe src=\"" + src + "\" width=\"640\" height=\"360\" align=\"middle\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>";
     });
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", addOptionsURL);
+    document.addEventListener("DOMContentLoaded", updateElements);
   } else {
-    addOptionsURL();
+    updateElements();
   }
 
   window.INSTALL_SCOPE = {
@@ -53,7 +51,7 @@
       });
       options = nextOptions;
 
-      addOptionsURL();
+      updateElements();
     }
   };
 })();
