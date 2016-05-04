@@ -36,7 +36,7 @@
               "title": "Location",
               "type": "object",
               "format": "element",
-              "description": "Select where on the page would you like this embed to appear",
+              "description": "Where should the video appear on the page?",
               "order": 2,
               "default": {
                 "selector": "body",
