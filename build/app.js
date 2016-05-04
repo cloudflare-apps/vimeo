@@ -4,6 +4,7 @@
   var elements = [];
   var options = INSTALL_OPTIONS;
   var CONTAINER_CLASS = "eager-vimeo";
+  var FULLSCREEN_ATTRIBUTES = ["webkitallowfullscreen", "mozallowfullscreen", "allowfullscreen"];
 
   var vimeoRegex = /https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/i;
 
@@ -36,17 +37,18 @@
       var element = elements[i] = Eager.createElement(location, elements[i]);
 
       element.className = CONTAINER_CLASS;
-      var eagerIframe = document.createElement("iframe");
+      var iframe = document.createElement("iframe");
 
-      eagerIframe.src = "" + src;
-      eagerIframe.frameborder = "0";
-      element.appendChild(eagerIframe);
+      iframe.src = "" + src;
+      iframe.frameborder = "0";
+      FULLSCREEN_ATTRIBUTES.forEach(function (attribute) {
+        return iframe.setAttribute(attribute, "");
+      });
+      element.appendChild(iframe);
 
-      eagerIframe.addEventListener("load", function handle() {
+      iframe.addEventListener("load", function handle() {
         element.setAttribute("data-state", "loaded");
       });
-
-      // element.innerHTML = `<iframe src="${src}" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>`
     });
   }
 

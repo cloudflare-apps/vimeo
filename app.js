@@ -2,6 +2,11 @@
   const elements = []
   let options = INSTALL_OPTIONS
   const CONTAINER_CLASS = "eager-vimeo"
+  const FULLSCREEN_ATTRIBUTES = [
+    "webkitallowfullscreen",
+    "mozallowfullscreen",
+    "allowfullscreen"
+  ]
 
   const vimeoRegex = /https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/i
 
@@ -29,17 +34,16 @@
         const element = elements[i] = Eager.createElement(location, elements[i])
 
         element.className = CONTAINER_CLASS
-        const eagerIframe = document.createElement("iframe")
+        const iframe = document.createElement("iframe")
 
-        eagerIframe.src = `${src}`
-        eagerIframe.frameborder = "0"
-        element.appendChild(eagerIframe)
+        iframe.src = `${src}`
+        iframe.frameborder = "0"
+        FULLSCREEN_ATTRIBUTES.forEach(attribute => iframe.setAttribute(attribute, ""))
+        element.appendChild(iframe)
 
-        eagerIframe.addEventListener("load", function handle(){
+        iframe.addEventListener("load", function handle(){
           element.setAttribute("data-state", "loaded")
         })
-
-        // element.innerHTML = `<iframe src="${src}" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>`
       })
   }
   
