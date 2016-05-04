@@ -1,0 +1,7 @@
+.eager-vimeo > iframe {
+  display: none;
+}
+
+.eager-vimeo[data-state="loaded"] > iframe {
+  display: block;
+}
