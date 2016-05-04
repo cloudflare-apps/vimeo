@@ -1,56 +1,71 @@
 "use strict";
 
 (function () {
-  var element = void 0;
+  var elements = [];
   var options = INSTALL_OPTIONS;
+  var CONTAINER_CLASS = "eager-vimeo";
+  var FULLSCREEN_ATTRIBUTES = ["webkitallowfullscreen", "mozallowfullscreen", "allowfullscreen"];
 
   var vimeoRegex = /https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/i;
 
-  function parseURL(url) {
+  function getVideoID(url) {
     var match = vimeoRegex.exec(url);
-    var id = void 0;
 
-    if (match) {
-      id = match[3];
-    } else {
-      if (!match) return null;
-    }
-
-    return { id: id };
+    return match ? match[3] : null;
   }
 
-  function add() {
-    for (var i = 0; i < options.embeds.length; i++) {
-      if (!options.embeds[i].url || !options.embeds[i].location || !options.embeds[i].location.selector) return;
+  function updateElements() {
+    var _options = options;
+    var embeds = _options.embeds;
 
-      var info = parseURL(options.embeds[i].url);
 
-      if (!info) continue;
+    embeds.reverse().filter(function ($) {
+      return $.url;
+    }).forEach(function (_ref, i) {
+      var url = _ref.url;
+      var location = _ref.location;
+      var autoplay = _ref.autoplay;
 
-      var embed = "https://player.vimeo.com/video/" + info.id + "?";
+      var info = getVideoID(url);
 
-      if (options.embeds[i].autoplay) {
-        embed += "autoplay=1&title=0&byline=0&portrait=0";
-      } else {
-        embed += "title=0&byline=0&portrait=0";
+      var src = "https://player.vimeo.com/video/" + info + "?title=0&byline=0&portrait=0";
+
+      if (autoplay) {
+        src += "&autoplay=1";
       }
 
-      element = Eager.createElement(options.embeds[i].location);
-      element.innerHTML = "<iframe src=\"" + embed + "\" width=\"640\" height=\"390\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>";
-    }
+      var element = elements[i] = Eager.createElement(location, elements[i]);
+
+      element.className = CONTAINER_CLASS;
+      var iframe = document.createElement("iframe");
+
+      iframe.addEventListener("load", function () {
+        return element.setAttribute("data-state", "loaded");
+      });
+
+      iframe.src = src;
+      iframe.frameBorder = 0;
+      FULLSCREEN_ATTRIBUTES.forEach(function (attribute) {
+        return iframe.setAttribute(attribute, "");
+      });
+      element.appendChild(iframe);
+    });
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", add);
+    document.addEventListener("DOMContentLoaded", updateElements);
   } else {
-    add();
+    updateElements();
   }
 
   window.INSTALL_SCOPE = {
     setOptions: function setOptions(nextOptions) {
+      elements.forEach(function (element) {
+        return Eager.createElement(null, element);
+      });
       options = nextOptions;
 
-      add();
+      updateElements();
     }
   };
 })();

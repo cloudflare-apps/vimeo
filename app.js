@@ -1,58 +1,64 @@
-(function (){
-  let element
+(function () {
+  const elements = []
   let options = INSTALL_OPTIONS
+  const CONTAINER_CLASS = "eager-vimeo"
+  const FULLSCREEN_ATTRIBUTES = [
+    "webkitallowfullscreen",
+    "mozallowfullscreen",
+    "allowfullscreen"
+  ]
 
   const vimeoRegex = /https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/i
 
-  function parseURL(url){
+  function getVideoID(url) {
     const match = vimeoRegex.exec(url)
-    let id
 
-    if (match){
-      id = match[3]
-    }
-    else {
-      if (!match) return null
-    }
-
-    return {id: id}
+    return match ? match[3] : null 
   }
 
-  function add(){
-    for (let i = 0; i < options.embeds.length; i++){
-      if (!options.embeds[i].url || !options.embeds[i].location || !options.embeds[i].location.selector) return
+  function updateElements() {      
+    const {embeds} = options
 
-      const info = parseURL(options.embeds[i].url)
+    embeds
+      .reverse()
+      .filter($ => $.url)
+      .forEach(({url, location, autoplay}, i) => {
+        const info = getVideoID(url)
 
-      if (!info)
-        continue
+        let src = `https://player.vimeo.com/video/${info}?title=0&byline=0&portrait=0`
 
-      let embed = `https://player.vimeo.com/video/${info.id}?`
+        if (autoplay) {
+          src += "&autoplay=1"
+        }
 
-      if (options.embeds[i].autoplay){
-        embed += "autoplay=1&title=0&byline=0&portrait=0"
-      }
-      else {
-        embed += "title=0&byline=0&portrait=0"
-      }
+        const element = elements[i] = Eager.createElement(location, elements[i])
 
-      element = Eager.createElement(options.embeds[i].location)
-      element.innerHTML = `<iframe src="${embed}" width="640" height="390" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>`
-    }
+        element.className = CONTAINER_CLASS
+        const iframe = document.createElement("iframe")
+
+        iframe.addEventListener("load", () => element.setAttribute("data-state", "loaded"))
+
+        iframe.src = src
+        iframe.frameBorder = 0
+        FULLSCREEN_ATTRIBUTES.forEach(attribute => iframe.setAttribute(attribute, ""))
+        element.appendChild(iframe)
+      })
   }
+  
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", add)
+    document.addEventListener("DOMContentLoaded", updateElements)
   }
   else {
-    add()
+    updateElements()
   }
 
   window.INSTALL_SCOPE = {
     setOptions(nextOptions) {
+      elements.forEach(element => Eager.createElement(null, element))
       options = nextOptions
 
-      add()
+      updateElements()
     }
   }
 }())

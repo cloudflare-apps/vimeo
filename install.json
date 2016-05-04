@@ -3,7 +3,19 @@
     "head": [
       {
         "type": "script",
-        "src": "./app.js"
+        "src": "./build/app.js"
+      },
+      {
+        "type": "style",
+        "src": "./build/app.css"
+      }
+    ]
+  },
+  "preview": {
+    "handlers": [
+      {
+        "options": ["*"],
+        "execute": "INSTALL_SCOPE.setOptions(INSTALL_OPTIONS)"
       }
     ]
   },
@@ -21,14 +33,19 @@
               "type": "string",
               "description": "The URL of the Vimeo video or playlist to be embedded",
               "order": 1,
-              "default": "https://vimeo.com/45196609"
+              "default": "https://vimeo.com/45196609",
+              "placeholder": "https://vimeo.com/123..."
             },
             "location": {
               "title": "Location",
               "type": "object",
               "format": "element",
-              "description": "Select where on the page would you like this embed to appear",
-              "order": 2
+              "description": "Where should the video appear on the page?",
+              "order": 2,
+              "default": {
+                "selector": "body",
+                "method": "prepend"
+              }
             },
             "autoplay": {
               "title": "Autoplay",
