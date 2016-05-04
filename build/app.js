@@ -43,8 +43,8 @@
         return element.setAttribute("data-state", "loaded");
       });
 
-      iframe.src = "" + src;
-      iframe.frameborder = "0";
+      iframe.src = src;
+      iframe.frameBorder = 0;
       FULLSCREEN_ATTRIBUTES.forEach(function (attribute) {
         return iframe.setAttribute(attribute, "");
       });
