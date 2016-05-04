@@ -39,16 +39,16 @@
       element.className = CONTAINER_CLASS;
       var iframe = document.createElement("iframe");
 
+      iframe.addEventListener("load", function () {
+        return element.setAttribute("data-state", "loaded");
+      });
+
       iframe.src = "" + src;
       iframe.frameborder = "0";
       FULLSCREEN_ATTRIBUTES.forEach(function (attribute) {
         return iframe.setAttribute(attribute, "");
       });
       element.appendChild(iframe);
-
-      iframe.addEventListener("load", function handle() {
-        element.setAttribute("data-state", "loaded");
-      });
     });
   }
 

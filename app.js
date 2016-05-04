@@ -36,14 +36,12 @@
         element.className = CONTAINER_CLASS
         const iframe = document.createElement("iframe")
 
+        iframe.addEventListener("load", () => element.setAttribute("data-state", "loaded"))
+
         iframe.src = `${src}`
         iframe.frameborder = "0"
         FULLSCREEN_ATTRIBUTES.forEach(attribute => iframe.setAttribute(attribute, ""))
         element.appendChild(iframe)
-
-        iframe.addEventListener("load", function handle(){
-          element.setAttribute("data-state", "loaded")
-        })
       })
   }
   
