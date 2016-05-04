@@ -34,7 +34,7 @@
               "description": "The URL of the Vimeo video or playlist to be embedded",
               "order": 1,
               "default": "https://vimeo.com/45196609",
-              "placeholder": "https://vimeo.com"
+              "placeholder": "https://vimeo.com/123..."
             },
             "location": {
               "title": "Location",
