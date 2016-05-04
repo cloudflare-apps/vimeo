@@ -8,3 +8,7 @@
 .eager-vimeo[data-state="loaded"] > iframe {
   display: block;
 }
+
+.eager-vimeo {
+	display: block;
+}
