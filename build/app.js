@@ -3,6 +3,7 @@
 (function () {
   var elements = [];
   var options = INSTALL_OPTIONS;
+  var CONTAINER_CLASS = "eager-vimeo";
 
   var vimeoRegex = /https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/i;
 
@@ -34,7 +35,18 @@
 
       var element = elements[i] = Eager.createElement(location, elements[i]);
 
-      element.innerHTML = "<div style=\"text-align: center; width: 100%\"><iframe src=\"" + src + "\" width=\"640\" height=\"360\" align=\"middle\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>";
+      element.className = CONTAINER_CLASS;
+      var eagerIframe = document.createElement("iframe");
+
+      eagerIframe.src = "" + src;
+      eagerIframe.frameborder = "0";
+      element.appendChild(eagerIframe);
+
+      eagerIframe.addEventListener("load", function handle() {
+        element.setAttribute("data-state", "loaded");
+      });
+
+      // element.innerHTML = `<iframe src="${src}" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>`
     });
   }
 
