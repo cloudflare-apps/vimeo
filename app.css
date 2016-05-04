@@ -1,14 +1,14 @@
+.eager-vimeo {
+  display: block;
+}
+
 .eager-vimeo > iframe {
-  margin: 0 auto;
   display: none;
-  max-width: 560px;
+  margin: 0 auto;
   max-height: 315px;
+  max-width: 560px;
 }
 
 .eager-vimeo[data-state="loaded"] > iframe {
   display: block;
-}
-
-.eager-vimeo {
-	display: block;
 }
