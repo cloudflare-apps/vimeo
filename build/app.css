@@ -1,7 +1,12 @@
 .eager-vimeo > iframe {
+  margin: 0 auto;
   display: none;
+  max-width: 560px;
+  max-height: 315px;
 }
 
 .eager-vimeo[data-state="loaded"] > iframe {
   display: block;
+  max-width: 560px;
+  max-height: 315px;
 }
