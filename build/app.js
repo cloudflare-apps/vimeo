@@ -37,17 +37,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     }).filter(function ($) {
       return $.params;
     }).forEach(function (_ref, i) {
-      var url = _ref.url;
+      var params = _ref.params;
       var location = _ref.location;
       var autoplay = _ref.autoplay;
 
-      var _getVideoParams = getVideoParams(url);
-
-      var id = _getVideoParams.id;
-      var type = _getVideoParams.type;
-
-
-      var src = "https://player.vimeo.com/" + type + "/" + id + "?title=0&byline=0&portrait=0";
+      var src = "https://player.vimeo.com/" + params.type + "/" + params.id + "?title=0&byline=0&portrait=0";
 
       if (autoplay) {
         src += "&autoplay=1";
@@ -64,7 +58,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
       iframe.src = src;
       iframe.frameBorder = 0;
-      iframe.sandbox = "allow-scripts";
       FULLSCREEN_ATTRIBUTES.forEach(function (attribute) {
         return iframe.setAttribute(attribute, "");
       });

@@ -32,10 +32,8 @@
       .reverse()
       .map($ => ({...$, params: getVideoParams($.url)}))
       .filter($ => $.params)
-      .forEach(({url, location, autoplay}, i) => {
-        const {id, type} = getVideoParams(url)
-
-        let src = `https://player.vimeo.com/${type}/${id}?title=0&byline=0&portrait=0`
+      .forEach(({params, location, autoplay}, i) => {
+        let src = `https://player.vimeo.com/${params.type}/${params.id}?title=0&byline=0&portrait=0`
 
         if (autoplay) {
           src += "&autoplay=1"
@@ -50,7 +48,6 @@
 
         iframe.src = src
         iframe.frameBorder = 0
-        iframe.sandbox = "allow-scripts"
         FULLSCREEN_ATTRIBUTES.forEach(attribute => iframe.setAttribute(attribute, ""))
         element.appendChild(iframe)
       })
