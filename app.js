@@ -8,24 +8,34 @@
     "allowfullscreen"
   ]
 
-  const vimeoRegex = /https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/i
+  const URL_PATTERN = /vimeo\.com\/?(.*)\/(.*)/i
 
-  function getVideoID(url) {
-    const match = vimeoRegex.exec(url)
+  function getVideoParams(url = "") {
+    const match = URL_PATTERN.exec(url)
 
-    return match ? match[3] : null 
+    if (!match) return null
+
+    const params = {
+      id: match[2],
+      type: match[1] || "video"
+    }
+
+    if (params.type === "album") params.type = "hubnut/album"
+
+    return params
   }
 
-  function updateElements() {      
+  function updateElements() {
     const {embeds} = options
 
     embeds
       .reverse()
-      .filter($ => $.url)
+      .map($ => ({...$, params: getVideoParams($.url)}))
+      .filter($ => $.params)
       .forEach(({url, location, autoplay}, i) => {
-        const info = getVideoID(url)
+        const {id, type} = getVideoParams(url)
 
-        let src = `https://player.vimeo.com/video/${info}?title=0&byline=0&portrait=0`
+        let src = `https://player.vimeo.com/${type}/${id}?title=0&byline=0&portrait=0`
 
         if (autoplay) {
           src += "&autoplay=1"
@@ -40,11 +50,12 @@
 
         iframe.src = src
         iframe.frameBorder = 0
+        iframe.sandbox = "allow-scripts"
         FULLSCREEN_ATTRIBUTES.forEach(attribute => iframe.setAttribute(attribute, ""))
         element.appendChild(iframe)
       })
   }
-  
+
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", updateElements)
