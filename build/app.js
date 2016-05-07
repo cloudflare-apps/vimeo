@@ -1,17 +1,30 @@
 "use strict";
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 (function () {
   var elements = [];
   var options = INSTALL_OPTIONS;
   var CONTAINER_CLASS = "eager-vimeo";
   var FULLSCREEN_ATTRIBUTES = ["webkitallowfullscreen", "mozallowfullscreen", "allowfullscreen"];
 
-  var vimeoRegex = /https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/i;
+  var URL_PATTERN = /vimeo\.com\/?(.*)\/(.*)/i;
 
-  function getVideoID(url) {
-    var match = vimeoRegex.exec(url);
+  function getVideoParams() {
+    var url = arguments.length <= 0 || arguments[0] === undefined ? "" : arguments[0];
 
-    return match ? match[3] : null;
+    var match = URL_PATTERN.exec(url);
+
+    if (!match) return null;
+
+    var params = {
+      id: match[2],
+      type: match[1] || "video"
+    };
+
+    if (params.type === "album") params.type = "hubnut/album";
+
+    return params;
   }
 
   function updateElements() {
@@ -19,16 +32,16 @@
     var embeds = _options.embeds;
 
 
-    embeds.reverse().filter(function ($) {
-      return $.url;
+    embeds.reverse().map(function ($) {
+      return _extends({}, $, { params: getVideoParams($.url) });
+    }).filter(function ($) {
+      return $.params;
     }).forEach(function (_ref, i) {
-      var url = _ref.url;
+      var params = _ref.params;
       var location = _ref.location;
       var autoplay = _ref.autoplay;
 
-      var info = getVideoID(url);
-
-      var src = "https://player.vimeo.com/video/" + info + "?title=0&byline=0&portrait=0";
+      var src = "https://player.vimeo.com/" + params.type + "/" + params.id + "?title=0&byline=0&portrait=0";
 
       if (autoplay) {
         src += "&autoplay=1";
