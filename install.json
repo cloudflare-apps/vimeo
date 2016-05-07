@@ -31,7 +31,7 @@
             "url": {
               "title": "URL",
               "type": "string",
-              "description": "The URL of the Vimeo video or playlist to be embedded",
+              "description": "The URL of the Vimeo video to be embedded",
               "order": 1,
               "default": "https://vimeo.com/45196609",
               "placeholder": "https://vimeo.com/123..."
@@ -40,7 +40,7 @@
               "title": "Location",
               "type": "object",
               "format": "element",
-              "description": "Where should the video appear on the page?",
+              "description": "Select where on the page would you like this video to appear",
               "order": 2,
               "default": {
                 "selector": "body",
@@ -50,7 +50,7 @@
             "autoplay": {
               "title": "Autoplay",
               "type": "boolean",
-              "description": "Should the video play automatically when the page is loaded?",
+              "description": "Enable autoplay",
               "order": 3
             }
           }
