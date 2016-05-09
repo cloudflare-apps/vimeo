@@ -1,4 +1,6 @@
 (function () {
+  if (!window.addEventListener) return // Check for IE9+
+
   const elements = []
   let options = INSTALL_OPTIONS
   const CONTAINER_CLASS = "eager-vimeo"
