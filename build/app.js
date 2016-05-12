@@ -5,10 +5,12 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 (function () {
   if (!window.addEventListener) return; // Check for IE9+
 
-  var elements = [];
-  var options = INSTALL_OPTIONS;
+  var UPDATE_DELAY = 1500;
   var CONTAINER_CLASS = "eager-vimeo";
   var FULLSCREEN_ATTRIBUTES = ["webkitallowfullscreen", "mozallowfullscreen", "allowfullscreen"];
+  var elements = [];
+  var options = INSTALL_OPTIONS;
+  var updateTimeout = void 0;
 
   var URL_PATTERN = /vimeo\.com\/?(.*)\/(.*)/i;
 
@@ -24,6 +26,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       type: match[1] || "video"
     };
 
+    // Albums aren't official supported in the previewer since they use
+    // Flash in an sandboxed iframe. Perhaps they'll one day work!
     if (params.type === "album") params.type = "hubnut/album";
 
     return params;
@@ -45,24 +49,19 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
       var src = "https://player.vimeo.com/" + params.type + "/" + params.id + "?title=0&byline=0&portrait=0";
 
-      if (autoplay) {
-        src += "&autoplay=1";
-      }
+      if (autoplay) src += "&autoplay=1";
 
       var element = elements[i] = Eager.createElement(location, elements[i]);
 
       element.className = CONTAINER_CLASS;
       var iframe = document.createElement("iframe");
 
-      iframe.addEventListener("load", function () {
-        return element.setAttribute("data-state", "loaded");
-      });
-
       iframe.src = src;
       iframe.frameBorder = 0;
       FULLSCREEN_ATTRIBUTES.forEach(function (attribute) {
         return iframe.setAttribute(attribute, "");
       });
+
       element.appendChild(iframe);
     });
   }
@@ -75,12 +74,16 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
   window.INSTALL_SCOPE = {
     setOptions: function setOptions(nextOptions) {
-      elements.forEach(function (element) {
-        return Eager.createElement(null, element);
-      });
+      clearTimeout(updateTimeout);
       options = nextOptions;
 
-      updateElements();
+      updateTimeout = setTimeout(function () {
+        elements.forEach(function (element) {
+          return Eager.createElement(null, element);
+        });
+
+        updateElements();
+      }, UPDATE_DELAY);
     }
   };
 })();
