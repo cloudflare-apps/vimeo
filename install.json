@@ -21,6 +21,17 @@
   },
   "options": {
     "properties": {
+      "location": {
+        "title": "Location",
+        "type": "object",
+        "format": "element",
+        "description": "Where should the vidoes appear on your site?.",
+        "order": 0,
+        "default": {
+          "selector": "body",
+          "method": "prepend"
+        }
+      },
       "embeds": {
         "title": "Videos",
         "type": "array",
@@ -36,22 +47,11 @@
               "default": "https://vimeo.com/45196609",
               "placeholder": "https://vimeo.com/123..."
             },
-            "location": {
-              "title": "Location",
-              "type": "object",
-              "format": "element",
-              "description": "Select where you would like this video to appear.",
-              "order": 2,
-              "default": {
-                "selector": "body",
-                "method": "prepend"
-              }
-            },
             "autoplay": {
               "title": "Autoplay",
               "type": "boolean",
               "description": "Play the video when the page loads.",
-              "order": 3
+              "order": 2
             }
           }
         }

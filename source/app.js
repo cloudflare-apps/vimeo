@@ -2,11 +2,10 @@
   if (!window.addEventListener) return // Check for IE9+
 
   const UPDATE_DELAY = 1500
-  const CONTAINER_CLASS = "eager-vimeo"
   const FULLSCREEN_ATTRIBUTES = [
-    "webkitallowfullscreen",
-    "mozallowfullscreen",
-    "allowfullscreen"
+    'webkitallowfullscreen',
+    'mozallowfullscreen',
+    'allowfullscreen'
   ]
   const elements = []
   let options = INSTALL_OPTIONS
@@ -14,63 +13,59 @@
 
   const URL_PATTERN = /vimeo\.com\/?(.*)\/(.*)/i
 
-  function getVideoParams(url = "") {
+  function getVideoParams (url = '') {
     const match = URL_PATTERN.exec(url)
 
     if (!match) return null
 
     const params = {
       id: match[2],
-      type: match[1] || "video"
+      type: match[1] || 'video'
     }
 
     // Albums aren't official supported in the previewer since they use
     // Flash in an sandboxed iframe. Perhaps they'll one day work!
-    if (params.type === "album") params.type = "hubnut/album"
+    if (params.type === 'album') params.type = 'hubnut/album'
 
     return params
   }
 
-  function updateElements() {
-    const {embeds} = options
-
-    embeds
+  function updateElements () {
+    options.embeds
       .reverse()
       .map($ => ({...$, params: getVideoParams($.url)}))
       .filter($ => $.params)
-      .forEach(({params, location, autoplay}, i) => {
+      .forEach(({params, autoplay}, i) => {
         let src = `https://player.vimeo.com/${params.type}/${params.id}?title=0&byline=0&portrait=0`
 
-        if (autoplay) src += "&autoplay=1"
+        if (autoplay) src += '&autoplay=1'
 
-        const element = elements[i] = Eager.createElement(location, elements[i])
+        const element = elements[i] = INSTALL.createElement(options.location, elements[i])
+        element.setAttribute('app', 'vimeo')
 
-        element.className = CONTAINER_CLASS
-        const iframe = document.createElement("iframe")
+        const iframe = document.createElement('iframe')
 
         iframe.src = src
         iframe.frameBorder = 0
-        FULLSCREEN_ATTRIBUTES.forEach(attribute => iframe.setAttribute(attribute, ""))
+        FULLSCREEN_ATTRIBUTES.forEach(attribute => iframe.setAttribute(attribute, ''))
 
         element.appendChild(iframe)
       })
   }
 
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", updateElements)
-  }
-  else {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', updateElements)
+  } else {
     updateElements()
   }
 
   window.INSTALL_SCOPE = {
-    setOptions(nextOptions) {
+    setOptions (nextOptions) {
       clearTimeout(updateTimeout)
       options = nextOptions
 
       updateTimeout = setTimeout(() => {
-        elements.forEach(element => Eager.createElement(null, element))
+        elements.forEach(element => INSTALL.createElement(null, element))
 
         updateElements()
       }, UPDATE_DELAY)

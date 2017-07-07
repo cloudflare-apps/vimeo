@@ -1,0 +1,15 @@
+cloudflare-app[app="vimeo"] {
+  display: block;
+}
+
+cloudflare-app[app="vimeo"] + cloudflare-app[app="vimeo"] {
+  margin-top: 1em;
+}
+
+cloudflare-app[app="vimeo"] > iframe {
+  display: block;
+  height: 315px;
+  margin: 0 auto;
+  max-width: 100%;
+  width: 560px;
+}
