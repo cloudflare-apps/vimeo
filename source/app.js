@@ -35,12 +35,12 @@
       .reverse()
       .map($ => ({...$, params: getVideoParams($.url)}))
       .filter($ => $.params)
-      .forEach(({params, autoplay}, i) => {
+      .forEach(({params, autoplay, location}, i) => {
         let src = `https://player.vimeo.com/${params.type}/${params.id}?title=0&byline=0&portrait=0`
 
         if (autoplay) src += '&autoplay=1'
 
-        const element = elements[i] = INSTALL.createElement(options.location, elements[i])
+        const element = elements[i] = INSTALL.createElement(location, elements[i])
         element.setAttribute('app', 'vimeo')
 
         const iframe = document.createElement('iframe')

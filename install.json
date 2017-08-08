@@ -1,6 +1,6 @@
 {
   "resources": {
-    "head": [
+    "body": [
       {
         "type": "script",
         "src": "./build/app.js"
@@ -21,17 +21,6 @@
   },
   "options": {
     "properties": {
-      "location": {
-        "title": "Location",
-        "type": "object",
-        "format": "element",
-        "description": "Where should the vidoes appear on your site?.",
-        "order": 0,
-        "default": {
-          "selector": "body",
-          "method": "prepend"
-        }
-      },
       "embeds": {
         "title": "Videos",
         "type": "array",
@@ -39,6 +28,17 @@
           "title": "Embed",
           "type": "object",
           "properties": {
+            "location": {
+              "title": "Location",
+              "type": "object",
+              "format": "element",
+              "description": "Where should the video appear on your site?.",
+              "order": 0,
+              "default": {
+                "selector": "body",
+                "method": "prepend"
+              }
+            },
             "url": {
               "title": "URL",
               "type": "string",
