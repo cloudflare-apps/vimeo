@@ -32,7 +32,7 @@
               "title": "Location",
               "type": "object",
               "format": "element",
-              "description": "Where should the video appear on your site?.",
+              "description": "Where should the video appear on your site?",
               "order": 0,
               "default": {
                 "selector": "body",
